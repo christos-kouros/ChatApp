@@ -29,6 +29,7 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
 
         user = new JTextField(20);
         user.addActionListener(this);
+        user.addKeyListener(this);
         user.setMaximumSize(user.getPreferredSize());
         user.setAlignmentX(CENTER_ALIGNMENT);
         user.setHorizontalAlignment(JTextField.CENTER);
@@ -101,8 +102,6 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
                 multiServerThread.currentUserName = user.getText();
                 dispose();
                 ChatPage chatPage = new ChatPage(server, multiServerThread , user.getText());
-
-
             } else {
                 System.out.println("Username invalid");
             }
@@ -114,22 +113,17 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("1");
-        System.out.println(e.getSource());
-        System.out.println(e.getKeyChar());
+
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("2");
-        System.out.println(e.getSource());
-        System.out.println(e.getKeyChar());
+        if (e.getKeyCode()==KeyEvent.VK_ENTER){
+            confirm.doClick();
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("3");
-        System.out.println(e.getSource());
-        System.out.println(e.getKeyChar());
     }
 }

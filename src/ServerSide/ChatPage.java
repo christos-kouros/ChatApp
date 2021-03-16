@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class ChatPage extends JFrame implements ActionListener {
     private Server server;
@@ -14,12 +17,18 @@ public class ChatPage extends JFrame implements ActionListener {
     private JTextField text;
     private JLabel showUserCount;
     private String username;
+    private SimpleDateFormat formatter;
+    private Date date;
 
-
-    public ChatPage(Server server, MultiServerThread multiServerThread , String username) {
+    public ChatPage(Server server, MultiServerThread multiServerThread, String username) {
         this.server = server;
         this.multiServerThread = multiServerThread;
         this.username = username;
+
+        formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        date = new Date();
+
+
 
         server.usernameList.add(username);
         server.userData.add(multiServerThread);
@@ -56,7 +65,7 @@ public class ChatPage extends JFrame implements ActionListener {
         text.setVisible(true);
 
 
-        showUserCount = new JLabel("Active users :  "+ server.activeUsers);
+        showUserCount = new JLabel("Active users :  " + server.activeUsers);
         showUserCount.setFont(showUserCount.getFont().deriveFont(20.0f));
         showUserCount.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -90,15 +99,15 @@ public class ChatPage extends JFrame implements ActionListener {
 
     }
 
-    public void refreshUserCount(){
+    public void refreshUserCount() {
         int i = 0;
         while (i < server.userFrame.size()) {
-            if(server.activeUsers > 1){
+            if (server.activeUsers > 1) {
                 server.userFrame.get(i).showUserCount.setForeground(Color.GREEN);
-            }else {
+            } else {
                 server.userFrame.get(i).showUserCount.setForeground(Color.RED);
             }
-            server.userFrame.get(i).showUserCount.setText("Active users :  "+ server.activeUsers);
+            server.userFrame.get(i).showUserCount.setText("Active users :  " + server.activeUsers);
             i++;
 
         }
@@ -127,8 +136,10 @@ public class ChatPage extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == text) {
+            server.timeList.add(formatter.format(date));
             server.textList.add(text.getText());
-            server.textList.add("- "+username+" -");
+            server.textList.add("- " + username + " -    " + formatter.format(date));
+            server.textList.add("");
             text.setText("");
 
             refreshText();

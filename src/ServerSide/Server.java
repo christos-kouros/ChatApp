@@ -8,6 +8,7 @@ public class Server {
     protected int activeUsers = 0;
     protected ArrayList<String> usernameList; // Contains all the usernames currently connected
     protected ArrayList<String> textList; // Contains all the text messages that have been sended
+    protected ArrayList<String> timeList;
     protected ArrayList<MultiServerThread> userData;
     protected ArrayList<ChatPage> userFrame; // Contains all the user Frames
 
@@ -24,6 +25,7 @@ public class Server {
             textList = new ArrayList<>();
             userData = new ArrayList<>();
             userFrame  = new ArrayList<>();
+            timeList = new ArrayList<String>();
         }catch (Exception e) {
             System.out.println("Error trying to start server");
         }
