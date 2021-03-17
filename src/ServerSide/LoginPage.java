@@ -15,8 +15,8 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
         this.multiServerThread = multiServerThread;
         this.server = server;
 
-
-        System.out.println("Users connected : " + ++server.usersConnected);
+        server.setUsersConnected(server.getUsersConnected() + 1);
+        System.out.println("Users connected : " + server.getUsersConnected());
 
         setSize(600, 300);
         setResizable(false);
@@ -76,8 +76,8 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
     }
 
     public boolean check(String name) {
-        if (!server.usernameList.contains(name)) {
-            multiServerThread.currentUserName = name;
+        if (!server.getUsernameList().contains(name)) {
+            multiServerThread.setCurrentUserName(name);
             return true;
         } else {
             return false;
@@ -94,7 +94,7 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
         if (e.getSource() == confirm) {
 
             if (check(user.getText())) {
-                multiServerThread.currentUserName = user.getText();
+                multiServerThread.setCurrentUserName(user.getText());
                 dispose();
                 ChatPage chatPage = new ChatPage(server, multiServerThread , user.getText());
             } else {

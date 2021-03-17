@@ -11,7 +11,7 @@ public class MultiServerThread extends Thread {
 
     private Socket clientSocket;
     private Server server;
-    protected String currentUserName;
+    private String currentUserName;
 
     /**
      * Constructor
@@ -22,6 +22,14 @@ public class MultiServerThread extends Thread {
         super("MailMultiServerThread");
         this.clientSocket = clientSocket;
         this.server = Server;
+    }
+
+    public void setCurrentUserName(String currentUserName){
+        this.currentUserName = currentUserName;
+    }
+
+    public String getCurrentUserName(){
+        return currentUserName;
     }
 
     public void run() {
@@ -39,19 +47,20 @@ public class MultiServerThread extends Thread {
      */
     public void exit() throws IOException {
         clientSocket.close();
-        System.out.println("Users connected : " + --server.usersConnected);
+        server.setUsersConnected(server.getUsersConnected() - 1);
+        System.out.println("Users connected : " +  server.getUsersConnected());
 
-        if (server.usersConnected == 0) {
+        if (server.getUsersConnected() == 0) {
             System.out.println("closing server");
-            server.serverSocket.close();
+            server.getServerSocket().close();
             System.exit(0);
         }else {
             int i = 0;
-            while (i < server.usernameList.size()) {
-                if (server.usernameList.get(i).equals(currentUserName)) {
-                    server.usernameList.remove(i);
-                    server.lastTextShown.remove(i);
-                    server.userFrame.remove(i);
+            while (i < server.getUsernameList().size()) {
+                if (server.getUsernameList().get(i).equals(currentUserName)) {
+                    server.getUsernameList().remove(i);
+                    server.getLastTextShown().remove(i);
+                    server.getUserFrame().remove(i);
 
                     break;
                 }

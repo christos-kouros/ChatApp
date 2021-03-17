@@ -29,10 +29,10 @@ public class ChatPage extends JFrame implements ActionListener {
         date = new Date();
 
 
-        server.usernameList.add(username);
-        server.userFrame.add(this);
-        server.activeUsers++;
-        server.lastTextShown.add(0);
+        server.getUsernameList().add(username);
+        server.getUserFrame().add(this);
+        server.setActiveUsers(server.getActiveUsers() + 1);
+        server.getLastTextShown().add(0);
 
 
         setSize(600, 600);
@@ -65,7 +65,7 @@ public class ChatPage extends JFrame implements ActionListener {
         text.setVisible(true);
 
 
-        showUserCount = new JLabel("Active users :  " + server.activeUsers);
+        showUserCount = new JLabel("Active users :  " + server.getActiveUsers());
         showUserCount.setFont(showUserCount.getFont().deriveFont(20.0f));
         showUserCount.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -86,7 +86,7 @@ public class ChatPage extends JFrame implements ActionListener {
                     try {
                         dispose();
                         multiServerThread.exit();
-                        server.activeUsers--;
+                        server.setActiveUsers(server.getActiveUsers() - 1);
                         refreshUserCount();
                     } catch (IOException e) {
                         System.out.println("");
@@ -101,13 +101,13 @@ public class ChatPage extends JFrame implements ActionListener {
 
     public void refreshUserCount() {
         int i = 0;
-        while (i < server.userFrame.size()) {
-            if (server.activeUsers > 1) {
-                server.userFrame.get(i).showUserCount.setForeground(Color.GREEN);
+        while (i < server.getUserFrame().size()) {
+            if (server.getActiveUsers() > 1) {
+                server.getUserFrame().get(i).showUserCount.setForeground(Color.GREEN);
             } else {
-                server.userFrame.get(i).showUserCount.setForeground(Color.RED);
+                server.getUserFrame().get(i).showUserCount.setForeground(Color.RED);
             }
-            server.userFrame.get(i).showUserCount.setText("Active users :  " + server.activeUsers);
+            server.getUserFrame().get(i).showUserCount.setText("Active users :  " + server.getActiveUsers());
             i++;
 
         }
@@ -116,17 +116,17 @@ public class ChatPage extends JFrame implements ActionListener {
 
     public void refreshText() {
 
-        int i , j;
+        int i, j;
 
         i = 0;
-        while (i < server.userFrame.size()) {
-            j = server.lastTextShown.get(i);
-            while (j < server.textList.size()) {
-                server.userFrame.get(i).mainBody.append(server.textList.get(j) + '\n');
+        while (i < server.getUserFrame().size()) {
+            j = server.getLastTextShown().get(i);
+            ;
+            while (j < server.getTextList().size()) {
+                server.getUserFrame().get(i).mainBody.append(server.getTextList().get(j) + '\n');
                 j++;
             }
-
-            server.lastTextShown.set(i,j);
+            server.getLastTextShown().set(i, j);
 
             i++;
 
@@ -137,9 +137,9 @@ public class ChatPage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == text) {
 
-            server.textList.add(text.getText());
-            server.textList.add("- " + username + " -    " + formatter.format(date));
-            server.textList.add("");
+            server.getTextList().add(text.getText());
+            server.getTextList().add("- " + username + " -    " + formatter.format(date));
+            server.getTextList().add("");
             text.setText("");
 
             refreshText();
