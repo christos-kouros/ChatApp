@@ -29,14 +29,14 @@ public class ChatPage extends JFrame implements ActionListener {
         date = new Date();
 
 
-
         server.usernameList.add(username);
-        server.userData.add(multiServerThread);
         server.userFrame.add(this);
         server.activeUsers++;
+        server.lastTextShown.add(0);
 
 
         setSize(600, 600);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         setTitle("Chat Page");
         setLocationRelativeTo(null);
@@ -116,17 +116,17 @@ public class ChatPage extends JFrame implements ActionListener {
 
     public void refreshText() {
 
-        int i, j;
+        int i , j;
 
         i = 0;
         while (i < server.userFrame.size()) {
-
-            j = 0;
-            server.userFrame.get(i).mainBody.setText(null);
+            j = server.lastTextShown.get(i);
             while (j < server.textList.size()) {
                 server.userFrame.get(i).mainBody.append(server.textList.get(j) + '\n');
                 j++;
             }
+
+            server.lastTextShown.set(i,j);
 
             i++;
 
@@ -136,7 +136,7 @@ public class ChatPage extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == text) {
-            server.timeList.add(formatter.format(date));
+
             server.textList.add(text.getText());
             server.textList.add("- " + username + " -    " + formatter.format(date));
             server.textList.add("");
