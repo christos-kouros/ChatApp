@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-public class LoginPage extends JFrame implements ActionListener , KeyListener {
+public class LoginPage extends JFrame implements ActionListener, KeyListener {
 
     private JLabel menulabel;
     private JTextField user;
@@ -86,8 +86,6 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
     }
 
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -96,7 +94,7 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
             if (check(user.getText())) {
                 multiServerThread.setCurrentUserName(user.getText());
                 dispose();
-                ChatPage chatPage = new ChatPage(server, multiServerThread , user.getText());
+                ChatPage chatPage = new ChatPage(server, multiServerThread, user.getText());
             } else {
                 System.out.println("Username invalid");
                 user.setText("");
@@ -114,7 +112,7 @@ public class LoginPage extends JFrame implements ActionListener , KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode()==KeyEvent.VK_ENTER){
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             confirm.doClick();
         }
     }

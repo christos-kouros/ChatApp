@@ -26,7 +26,6 @@ public class ChatPage extends JFrame implements ActionListener {
         this.username = username;
 
         formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        date = new Date();
 
 
         server.getUsernameList().add(username);
@@ -38,7 +37,7 @@ public class ChatPage extends JFrame implements ActionListener {
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
-        setTitle("Chat Page");
+        setTitle("Connected as : " + multiServerThread.getCurrentUserName());
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
@@ -121,7 +120,7 @@ public class ChatPage extends JFrame implements ActionListener {
         i = 0;
         while (i < server.getUserFrame().size()) {
             j = server.getLastTextShown().get(i);
-            ;
+
             while (j < server.getTextList().size()) {
                 server.getUserFrame().get(i).mainBody.append(server.getTextList().get(j) + '\n');
                 j++;
@@ -135,9 +134,11 @@ public class ChatPage extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == text) {
+        if (e.getSource() == text && !text.getText().equals("")) {
+
 
             server.getTextList().add(text.getText());
+            date = new Date();
             server.getTextList().add("- " + username + " -    " + formatter.format(date));
             server.getTextList().add("");
             text.setText("");

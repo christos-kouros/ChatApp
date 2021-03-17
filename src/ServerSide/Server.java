@@ -44,7 +44,7 @@ public class Server {
 
     }
 
-    public ServerSocket getServerSocket(){
+    public ServerSocket getServerSocket() {
         return serverSocket;
     }
 

@@ -24,11 +24,11 @@ public class MultiServerThread extends Thread {
         this.server = Server;
     }
 
-    public void setCurrentUserName(String currentUserName){
+    public void setCurrentUserName(String currentUserName) {
         this.currentUserName = currentUserName;
     }
 
-    public String getCurrentUserName(){
+    public String getCurrentUserName() {
         return currentUserName;
     }
 
@@ -48,13 +48,13 @@ public class MultiServerThread extends Thread {
     public void exit() throws IOException {
         clientSocket.close();
         server.setUsersConnected(server.getUsersConnected() - 1);
-        System.out.println("Users connected : " +  server.getUsersConnected());
+        System.out.println("Users connected : " + server.getUsersConnected());
 
         if (server.getUsersConnected() == 0) {
             System.out.println("closing server");
             server.getServerSocket().close();
             System.exit(0);
-        }else {
+        } else {
             int i = 0;
             while (i < server.getUsernameList().size()) {
                 if (server.getUsernameList().get(i).equals(currentUserName)) {
@@ -67,10 +67,6 @@ public class MultiServerThread extends Thread {
                 i++;
             }
         }
-
-
-
-
 
 
     }
