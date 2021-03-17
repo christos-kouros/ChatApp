@@ -10,6 +10,7 @@ public class Server {
     private ArrayList<String> textList; // Contains all the text messages that have been sended
     private ArrayList<ChatPage> userFrame; // Contains all the user Frames
     private ArrayList<Integer> lastTextShown; // For each users , shows the "id" of the last shown text
+    private ArrayList<String> history;
 
 
     public Server() {
@@ -25,6 +26,7 @@ public class Server {
             textList = new ArrayList<>();
             userFrame = new ArrayList<>();
             lastTextShown = new ArrayList<>();
+            history = new ArrayList<>();
 
         } catch (Exception e) {
             System.out.println("Error trying to start server");
@@ -62,6 +64,10 @@ public class Server {
 
     public ArrayList<ChatPage> getUserFrame() {
         return userFrame;
+    }
+
+    public ArrayList<String> getHistory() {
+        return history;
     }
 
     public void setActiveUsers(int activeUsers) {

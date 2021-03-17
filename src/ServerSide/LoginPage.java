@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.Date;
 
 public class LoginPage extends JFrame implements ActionListener, KeyListener {
 
@@ -10,13 +11,12 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
     private JButton confirm;
     private Server server;
     private MultiServerThread multiServerThread;
+    private Date date;
 
     public LoginPage(Server server, MultiServerThread multiServerThread) {
         this.multiServerThread = multiServerThread;
         this.server = server;
 
-        server.setUsersConnected(server.getUsersConnected() + 1);
-        System.out.println("Users connected : " + server.getUsersConnected());
 
         setSize(600, 300);
         setResizable(false);
@@ -53,6 +53,7 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
         add(Box.createRigidArea(new Dimension(0, 25)));
         add(confirm);
 
+        setVisible(true);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -61,16 +62,14 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
                 if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit ?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     try {
                         dispose();
-                        multiServerThread.exit();
+                        date = new Date();
+                        multiServerThread.exit("regular", date);
                     } catch (IOException e) {
                         System.out.println("");
                     }
                 }
             }
         });
-
-
-        setVisible(true);
 
 
     }
@@ -92,9 +91,14 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
         if (e.getSource() == confirm) {
 
             if (check(user.getText())) {
-                multiServerThread.setCurrentUserName(user.getText());
                 dispose();
-                ChatPage chatPage = new ChatPage(server, multiServerThread, user.getText());
+                if (user.getText().equals("admin")) {
+                    AdminMode adminMode = new AdminMode(server, multiServerThread);
+                } else {
+                    multiServerThread.setCurrentUserName(user.getText());
+                    ChatPage chatPage = new ChatPage(server, multiServerThread, user.getText());
+                }
+
             } else {
                 System.out.println("Username invalid");
                 user.setText("");

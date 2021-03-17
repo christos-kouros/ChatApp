@@ -33,6 +33,10 @@ public class ChatPage extends JFrame implements ActionListener {
         server.setActiveUsers(server.getActiveUsers() + 1);
         server.getLastTextShown().add(0);
 
+        date = new Date();
+
+        server.getHistory().add(" - " + multiServerThread.getCurrentUserName() + " -  Connected   at  " + formatter.format(date));
+
 
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -77,6 +81,8 @@ public class ChatPage extends JFrame implements ActionListener {
         refreshText();
         refreshUserCount();
 
+        setVisible(true);
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
@@ -84,7 +90,8 @@ public class ChatPage extends JFrame implements ActionListener {
                 if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit ?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     try {
                         dispose();
-                        multiServerThread.exit();
+                        date = new Date();
+                        multiServerThread.exit("regular", date);
                         server.setActiveUsers(server.getActiveUsers() - 1);
                         refreshUserCount();
                     } catch (IOException e) {
@@ -94,7 +101,6 @@ public class ChatPage extends JFrame implements ActionListener {
             }
         });
 
-        setVisible(true);
 
     }
 
@@ -136,9 +142,8 @@ public class ChatPage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == text && !text.getText().equals("")) {
 
-
-            server.getTextList().add(text.getText());
             date = new Date();
+            server.getTextList().add(text.getText());
             server.getTextList().add("- " + username + " -    " + formatter.format(date));
             server.getTextList().add("");
             text.setText("");

@@ -1,5 +1,8 @@
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Αυτή η κλάση εξυπηρετεί όλες τις  λειτουργίες του Server !
@@ -12,6 +15,8 @@ public class MultiServerThread extends Thread {
     private Socket clientSocket;
     private Server server;
     private String currentUserName;
+    private SimpleDateFormat formatter;
+    private Date date;
 
     /**
      * Constructor
@@ -22,6 +27,11 @@ public class MultiServerThread extends Thread {
         super("MailMultiServerThread");
         this.clientSocket = clientSocket;
         this.server = Server;
+        formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        server.setUsersConnected(server.getUsersConnected() + 1);
+        System.out.println("Users connected : " + server.getUsersConnected());
+
     }
 
     public void setCurrentUserName(String currentUserName) {
@@ -45,9 +55,17 @@ public class MultiServerThread extends Thread {
      *
      * @throws IOException
      */
-    public void exit() throws IOException {
+    public void exit(String reason, Date date) throws IOException {
+        if (reason.equals("admin")) {
+            server.getHistory().add("ADMIN LEFT     " + formatter.format(date));
+        } else {
+            server.getHistory().add(currentUserName + "  LEFT  " + formatter.format(date));
+        }
+
         clientSocket.close();
+
         server.setUsersConnected(server.getUsersConnected() - 1);
+
         System.out.println("Users connected : " + server.getUsersConnected());
 
         if (server.getUsersConnected() == 0) {
