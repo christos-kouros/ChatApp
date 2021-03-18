@@ -62,8 +62,7 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
                 if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit ?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     try {
                         dispose();
-                        date = new Date();
-                        multiServerThread.exit("regular", date);
+                        multiServerThread.exit(date = new Date());
                     } catch (IOException e) {
                         System.out.println("");
                     }
@@ -92,12 +91,8 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
 
             if (check(user.getText())) {
                 dispose();
-                if (user.getText().equals("admin")) {
-                    AdminMode adminMode = new AdminMode(server, multiServerThread);
-                } else {
-                    multiServerThread.setCurrentUserName(user.getText());
-                    ChatPage chatPage = new ChatPage(server, multiServerThread, user.getText());
-                }
+                multiServerThread.setCurrentUserName(user.getText());
+                ChatPage chatPage = new ChatPage(server, multiServerThread, user.getText());
 
             } else {
                 System.out.println("Username invalid");

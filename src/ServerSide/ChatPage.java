@@ -33,15 +33,12 @@ public class ChatPage extends JFrame implements ActionListener {
         server.setActiveUsers(server.getActiveUsers() + 1);
         server.getLastTextShown().add(0);
 
-        date = new Date();
-
-        server.getHistory().add(" - " + multiServerThread.getCurrentUserName() + " -  Connected   at  " + formatter.format(date));
-
+        server.getHistory().add(" - " + multiServerThread.getCurrentUserName() + " -  Connected   at  " + formatter.format(date = new Date()));
 
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
-        setTitle("Connected as : " + multiServerThread.getCurrentUserName());
+        setTitle("Connected   as  - " + multiServerThread.getCurrentUserName()+" -");
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
@@ -90,8 +87,7 @@ public class ChatPage extends JFrame implements ActionListener {
                 if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit ?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     try {
                         dispose();
-                        date = new Date();
-                        multiServerThread.exit("regular", date);
+                        multiServerThread.exit(date = new Date());
                         server.setActiveUsers(server.getActiveUsers() - 1);
                         refreshUserCount();
                     } catch (IOException e) {
@@ -142,9 +138,8 @@ public class ChatPage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == text && !text.getText().equals("")) {
 
-            date = new Date();
             server.getTextList().add(text.getText());
-            server.getTextList().add("- " + username + " -    " + formatter.format(date));
+            server.getTextList().add("- " + username + " -    " + formatter.format(date = new Date()));
             server.getTextList().add("");
             text.setText("");
 

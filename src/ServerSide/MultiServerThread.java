@@ -1,4 +1,3 @@
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -55,15 +54,10 @@ public class MultiServerThread extends Thread {
      *
      * @throws IOException
      */
-    public void exit(String reason, Date date) throws IOException {
-        if (reason.equals("admin")) {
-            server.getHistory().add("ADMIN LEFT     " + formatter.format(date));
-        } else {
-            server.getHistory().add(currentUserName + "  LEFT  " + formatter.format(date));
-        }
-
+    public void exit( Date date) throws IOException {
         clientSocket.close();
 
+        server.getHistory().add(currentUserName + "  LEFT  " + formatter.format(date));
         server.setUsersConnected(server.getUsersConnected() - 1);
 
         System.out.println("Users connected : " + server.getUsersConnected());
