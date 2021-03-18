@@ -33,12 +33,14 @@ public class ChatPage extends JFrame implements ActionListener {
         server.setActiveUsers(server.getActiveUsers() + 1);
         server.getLastTextShown().add(0);
 
-        server.getHistory().add(" - " + multiServerThread.getCurrentUserName() + " -  Connected   at  " + formatter.format(date = new Date()));
+
+        server.getTextList().add(" - " + multiServerThread.getCurrentUserName() + " -  Connected   at  " + formatter.format(date = new Date()));
+        server.getTextList().add("");
 
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
-        setTitle("Connected   as  - " + multiServerThread.getCurrentUserName()+" -");
+        setTitle("Connected   as  - " + multiServerThread.getCurrentUserName() + " -");
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
@@ -90,6 +92,7 @@ public class ChatPage extends JFrame implements ActionListener {
                         multiServerThread.exit(date = new Date());
                         server.setActiveUsers(server.getActiveUsers() - 1);
                         refreshUserCount();
+                        refreshText();
                     } catch (IOException e) {
                         System.out.println("");
                     }
