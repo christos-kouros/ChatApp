@@ -3,15 +3,15 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MultiServerThread extends Thread {
+public final class MultiServerThread extends Thread {
 
 
-    private Socket clientSocket;
-    private Server server;
+    private final Socket clientSocket;
+    private final Server server;
     private String currentUserName;
-    private SimpleDateFormat formatter;
+    private final SimpleDateFormat formatter;
 
-    public MultiServerThread(Server Server, Socket clientSocket) {
+    public MultiServerThread(final Server Server, final Socket clientSocket) {
         super("MailMultiServerThread");
         this.clientSocket = clientSocket;
         this.server = Server;
@@ -30,13 +30,15 @@ public class MultiServerThread extends Thread {
         return currentUserName;
     }
 
+    @Override
     public void run() {
 
-        LoginPage mainPage = new LoginPage(server, this);
+        new LoginPage(server, this);
 
     }
 
-    public void exit(Date date) throws IOException {
+
+    public void exit(final Date date) throws IOException {
         clientSocket.close();
 
         server.getTextList().add(" - " + currentUserName + " -    Left  " + formatter.format(date));
@@ -65,6 +67,4 @@ public class MultiServerThread extends Thread {
 
 
     }
-
-
 }

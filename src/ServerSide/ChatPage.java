@@ -1,7 +1,18 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -9,18 +20,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class ChatPage extends JFrame implements ActionListener {
-    private Server server;
-    private MultiServerThread multiServerThread;
-    private JTextArea mainBody;
-    private JScrollPane mainBodyScollPane;
-    private JTextField text;
-    private JLabel showUserCount;
-    private String username;
-    private SimpleDateFormat formatter;
+public final class ChatPage extends JFrame {
+    private final Server server;
+    private final MultiServerThread multiServerThread;
+    private final JTextArea mainBody;
+    private final JScrollPane mainBodyScrollPane;
+    private final JTextField text;
+    private final JLabel showUserCount;
+    private final String username;
+    private final SimpleDateFormat formatter;
     private Date date;
 
-    public ChatPage(Server server, MultiServerThread multiServerThread, String username) {
+    public ChatPage(final Server server, final MultiServerThread multiServerThread, final String username) {
         this.server = server;
         this.multiServerThread = multiServerThread;
         this.username = username;
@@ -54,17 +65,12 @@ public class ChatPage extends JFrame implements ActionListener {
         mainBody.setVisible(true);
 
 
-        mainBodyScollPane = new JScrollPane(mainBody);
-        mainBodyScollPane.setMaximumSize(mainBodyScollPane.getPreferredSize());
-        mainBodyScollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        mainBodyScrollPane = new JScrollPane(mainBody);
+        mainBodyScrollPane.setMaximumSize(mainBodyScrollPane.getPreferredSize());
+        mainBodyScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 
-        text = new JTextField(45);
-        text.setMaximumSize(text.getPreferredSize());
-        text.setAlignmentX(CENTER_ALIGNMENT);
-        text.setHorizontalAlignment(JTextField.CENTER);
-        text.addActionListener(this);
-        text.setVisible(true);
+        text = createJTextField();
 
 
         showUserCount = new JLabel("Active users :  " + server.getActiveUsers());
@@ -73,7 +79,7 @@ public class ChatPage extends JFrame implements ActionListener {
 
         add(showUserCount);
         add(Box.createRigidArea(new Dimension(0, 25)));
-        add(mainBodyScollPane);
+        add(mainBodyScrollPane);
         add(Box.createRigidArea(new Dimension(0, 75)));
         add(text);
 
@@ -86,7 +92,11 @@ public class ChatPage extends JFrame implements ActionListener {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
 
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit ?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                final int option = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to quit ?",
+                        "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                if (option == JOptionPane.YES_OPTION) {
                     try {
                         dispose();
                         multiServerThread.exit(date = new Date());
@@ -101,6 +111,26 @@ public class ChatPage extends JFrame implements ActionListener {
         });
 
 
+    }
+
+    private JTextField createJTextField() {
+        final JTextField text = new JTextField(45);
+        text.setMaximumSize(text.getPreferredSize());
+        text.setAlignmentX(CENTER_ALIGNMENT);
+        text.setHorizontalAlignment(JTextField.CENTER);
+        text.addActionListener(e -> {
+            if (!text.getText().equals("")) {
+
+                server.getTextList().add(text.getText());
+                server.getTextList().add("- " + username + " -    " + formatter.format(date = new Date()));
+                server.getTextList().add("");
+                text.setText("");
+
+                refreshText();
+            }
+        });
+        text.setVisible(true);
+        return text;
     }
 
     public void refreshUserCount() {
@@ -134,19 +164,6 @@ public class ChatPage extends JFrame implements ActionListener {
 
             i++;
 
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == text && !text.getText().equals("")) {
-
-            server.getTextList().add(text.getText());
-            server.getTextList().add("- " + username + " -    " + formatter.format(date = new Date()));
-            server.getTextList().add("");
-            text.setText("");
-
-            refreshText();
         }
     }
 }
