@@ -1,19 +1,33 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.awt.Dimension;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Date;
 
-public class LoginPage extends JFrame implements ActionListener, KeyListener {
+public final class LoginPage extends JFrame implements ActionListener, KeyListener {
 
-    private JLabel menulabel;
-    private JTextField user;
-    private JButton confirm;
-    private Server server;
-    private MultiServerThread multiServerThread;
+    private final JLabel menulabel;
+    private final JTextField user;
+    private final JButton confirm;
+    private final Server server;
+    private final MultiServerThread multiServerThread;
     private Date date;
 
-    public LoginPage(Server server, MultiServerThread multiServerThread) {
+    public LoginPage(final Server server, final MultiServerThread multiServerThread) {
         this.multiServerThread = multiServerThread;
         this.server = server;
 
@@ -59,7 +73,11 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
 
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit ?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                final int option = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to quit ?",
+                        "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                if (option == JOptionPane.YES_OPTION) {
                     try {
                         dispose();
                         multiServerThread.exit(date = new Date());
@@ -73,14 +91,8 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
 
     }
 
-    public boolean check(String name) {
-        if (!server.getUsernameList().contains(name)) {
-            multiServerThread.setCurrentUserName(name);
-            return true;
-        } else {
-            return false;
-        }
-
+    private boolean check(String name) {
+        return !server.getUsernameList().contains(name);
     }
 
 
@@ -89,10 +101,13 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
 
         if (e.getSource() == confirm) {
 
+            final String name = user.getText();
+
             if (check(user.getText())) {
+                multiServerThread.setCurrentUserName(name);
                 dispose();
-                multiServerThread.setCurrentUserName(user.getText());
-                ChatPage chatPage = new ChatPage(server, multiServerThread, user.getText());
+                multiServerThread.setCurrentUserName(name);
+                new ChatPage(server, multiServerThread, name);
 
             } else {
                 System.out.println("Username invalid");
@@ -105,9 +120,7 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
 
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -117,6 +130,5 @@ public class LoginPage extends JFrame implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-    }
+    public void keyReleased(KeyEvent e) {}
 }
